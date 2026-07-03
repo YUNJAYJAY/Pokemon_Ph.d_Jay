@@ -1,0 +1,7 @@
+*.json
+
+data/raw/pokeapi/pokemon/*
+!data/raw/pokeapi/pokemon/.gitkeep
+
+data/raw/pokeapi/pokemon-species/*
+!data/raw/pokeapi/pokemon-species/.gitkeep
