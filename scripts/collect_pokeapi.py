@@ -4,20 +4,27 @@ import time
 import requests
 
 BASE_URL = "https://pokeapi.co/api/v2"
-RAW_DIR = Path("data/raw/pokeapi")
-
-ENDPOINTS = [
-    "type",
-    "generation",
-    "pokemon-species",
-    "pokemon",
-    "move",
-    "ability",
-    "version-group",
-]
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+RAW_DIR = PROJECT_ROOT / "data" / "raw" / "pokeapi"
 
 REQUEST_DELAY = 0.2
 TIMEOUT = 20
+
+
+def get_endpoints() -> list[str]:
+    if not RAW_DIR.exists():
+        raise FileNotFoundError(f"Raw PokeAPI directory not found: {RAW_DIR}")
+
+    endpoints = sorted(
+        path.name
+        for path in RAW_DIR.iterdir()
+        if path.is_dir() and not path.name.startswith(".")
+    )
+
+    if not endpoints:
+        raise RuntimeError(f"No endpoint directories found in: {RAW_DIR}")
+
+    return endpoints
 
 
 def safe_filename(resource: dict) -> str:
@@ -70,7 +77,7 @@ def collect_endpoint(endpoint: str) -> None:
 
 
 def main() -> None:
-    for endpoint in ENDPOINTS:
+    for endpoint in get_endpoints():
         collect_endpoint(endpoint)
 
 
